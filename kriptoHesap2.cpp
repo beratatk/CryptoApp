@@ -29,7 +29,8 @@ int main(){
     int kriptoTlEder = 1; // 1kripto = 1tl
     int kullanici_girdi,kullanici_yatirim_miktar;
     string kullanici_hesap_no;
-    //Hesap hesap;
+    
+    int gun=1,ay=1,yil=2000;
 
     
     Hesap hesapList[100];
@@ -47,6 +48,7 @@ int main(){
     cout<<"7-Uygulamayı sonlandır.\n";
     cout<<"-------------------------------------"<<endl;
     cin >> kullanici_girdi;
+
     if (kullanici_girdi==1)
     {   
         
@@ -58,6 +60,22 @@ int main(){
         hesapList[i].hesapId = kullanici_hesap_no;
         hesapList[i].hesapBakiye=kullanici_yatirim_miktar;
         i=i+1;
+    }
+    else if (kullanici_girdi==5)
+    {
+        cout<<"Sistem tarihi:"<<gun<<"."<<ay<<"."<<yil<<endl;
+        cout<<"Ana menü için herhangi bir tuşu , tarihi değiştirmek için 0'ı tuşlayın...."<<endl;
+        cin>>kullanici_girdi;
+        if (kullanici_girdi==0)
+        {
+           cout<<"Tarih değiştirmeyi seçtiniz, yeni tarihi giriniz...\nGün:";
+           cin>>gun;
+           cout<<"Ay:";
+           cin>>ay;
+           cout<<"Yıl:";
+           cin>>yil;
+        }
+        
     }
     else if (kullanici_girdi==6)
     {
