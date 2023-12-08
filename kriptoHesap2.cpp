@@ -61,6 +61,37 @@ int main(){
         hesapList[i].hesapBakiye=kullanici_yatirim_miktar;
         i=i+1;
     }
+
+    else if (kullanici_girdi==2)
+    {
+        cout<<"Ozel hesap açmayı seçtiniz...\n";
+        cout<<"Hesap no giriniz:";  
+        cin>>kullanici_hesap_no;
+        cout<<"Yatıracağınız miktari giriniz:";
+        cin>>kullanici_yatirim_miktar;
+        hesapList[i].hesapId = kullanici_hesap_no;
+        hesapList[i].hesapBakiye=kullanici_yatirim_miktar;
+        i=i+1;
+    }
+    
+    else if (kullanici_girdi==3)
+    {   
+       int hesapParaEklemeSecim;
+       int hesapParaEklemeMiktar;
+       cout<<"Hesaba para ekleme islemini sectiniz...\n";
+        
+        for (int z = 0; z < i; z++)
+        {   
+            cout<<z<<"-Hesap ID:"<<hesapList[z].hesapId<<" Bakiye:"<<hesapList[z].hesapBakiye<<endl;
+        }
+       cout<<"Hesap seciniz...";
+       cin>>hesapParaEklemeSecim;
+       cout<<"Eklenecek tutari girin:";
+       cin>>hesapParaEklemeMiktar;
+       hesapList[hesapParaEklemeSecim].hesapBakiye+=hesapParaEklemeMiktar;
+    }
+    
+
     else if (kullanici_girdi==5)
     {
         cout<<"Sistem tarihi:"<<gun<<"."<<ay<<"."<<yil<<endl;
@@ -77,13 +108,14 @@ int main(){
         }
         
     }
+
     else if (kullanici_girdi==6)
     {
         cout<<"Mevcut hesaplar:\n";
         for (int z = 0; z < i; z++)
         {   
             
-            cout<<"Hesap ID:"<<hesapList[z].hesapId<<" Bakiye:"<<hesapList[z].hesapBakiye<<endl;
+            cout<<z<<"-Hesap ID:"<<hesapList[z].hesapId<<" Bakiye:"<<hesapList[z].hesapBakiye<<endl;
         }
         
     }
