@@ -1,3 +1,3 @@
 # CryptoApp
-KRİPTOKE APPKE
---BELFORT
+Basic crypto app for school project
+--Berat Atak
