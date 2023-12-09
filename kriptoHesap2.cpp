@@ -3,8 +3,9 @@ using namespace std;
 
 class Hesap{
     public:
-        float hesapKriptoBakiye; //hesapKriptoBakiye hesabin kripto bakiyesi
+        
         float hesapBakiye; //hesapBakiye = hesabin tl bakiyesi
+        float hesapKriptoBakiye; //hesapKriptoBakiye hesabin kripto bakiyesi
         string hesapId,hesapTur;
 
         void kriptoParaAl(int kriptoParaAlmaMiktari){
@@ -27,6 +28,7 @@ class Hesap{
 };
 
 int main(){
+    srand(time(0));
     float kriptoGenelTlEder = 1; // 1kripto = 1tl
     float kriptoOzelTlEder = 1;
     int kullanici_girdi;
@@ -143,41 +145,51 @@ int main(){
            cin>>yil2;
         
            totalGun = abs(gun2-gun)+abs((ay2-ay)*30)+abs((yil2-yil)*365);
+
            gun = gun2;
            ay = ay2;
            yil = yil2;
 
-           for (int i = 0; i < totalGun ; i++)
+           int aylikPeriyod = totalGun/30, aylikPeriyod2=aylikPeriyod*3;//her aylik periyotta rastgele 3 gun olacagi icin 
+           int randomGun,randomGun2,randomGun3;
+           int randomList[aylikPeriyod2],z=0; //burdaki zyi listeye ekleme isleminde kullancagiz
+           
+           for (int i = 0; i < aylikPeriyod; i++)//her 30 gunluk periyotlar icin rastgele 3 gun sectik ve o gunleri bi listeye ekledik
            {
-            kriptoGenelTlEder += kriptoGenelTlEder*1/100;
-            kriptoOzelTlEder += kriptoOzelTlEder*5/100;
+            randomGun = rand()%30;
+            randomList[z]=randomGun;
+            z++;
+            randomGun2 = rand()%30;
+            randomList[z]=randomGun2;
+            z++;
+            randomGun3 = rand()%30;
+            randomList[z]=randomGun3;
+            z++;
+            cout<<randomGun<<endl;
+            cout<<randomGun2<<endl;
+            cout<<randomGun3<<endl;//test etmek icin yazdirdim, bazen ayni sayilar seciliyor bu yuzden 3 farkli gun olmayabiliyor bunu cozecek fonksyion dusunulmeli
            }
-           for (int i = 0; i < totalGun/15; i++)
+
+           for (int i = 0; i < totalGun ; i++)//gunluk artis dongusu
+           {
+            kriptoGenelTlEder += kriptoGenelTlEder*1/100;//genel hesap gunluk %1artis sagliyor,her kosulda artacagi icin en basa yaziyoruz
+            for (int j = 0; j < aylikPeriyod2; j++)//o gun rastgele gun mu diye kontrol etmek icin bu donguyu kullanacagiz
+            {
+                if (i==randomList[j])
+                {
+                kriptoOzelTlEder -= kriptoOzelTlEder*10/100;
+                cout<<"Rastgele gunler "<<i<<endl;//test etmek icin yazdirdim
+                }
+            }
+            kriptoOzelTlEder += kriptoOzelTlEder*5/100;// her gun %5 artiyor fakat dusus gunlerinde de artiyor , projede her gun artacagi belirtilmis, eger dusus gunleri artmayacak ise duzeltilmeli
+            cout<<"normal gun: "<<i<<endl;  
+           }
+           for (int i = 0; i < totalGun/15; i++)//her 15 gunde bir genel hesap %5 deger kaybediyor
            {
             kriptoGenelTlEder -= kriptoGenelTlEder*5/100;
            }
-           for (int i = 0; i < totalGun/30; i++)//rastgele gunler seciliyor fakat hesaplama sirali oldugu icin hep ayni sonuc geliyor ozel hesap birlikte hesaplanmali ayni dongu icinde
-           {                                    //her ay ayni rastgele gun oluyor, projede rastgele gunlerinde degismesi istenmis!
-            srand(time(NULL));
-            int randomGun1 = rand()%30+1;
-            int randomGun2 = rand()%30+1;
-            int randomGun3 = rand()%30+1; //1 ile 30 arasi bir sayi tut
-            cout<<"Random sayilar:"<<randomGun1<<" "<<randomGun2<<" "<<randomGun3;
-            for (int i = 0; i < 30; i++)
-            {
-                if (i == randomGun1||randomGun2||randomGun3)
-                {
-                    kriptoOzelTlEder -= kriptoOzelTlEder*10/100;
-                }
-            }
-            
-           
-            
-           }
-           cout<<kriptoGenelTlEder<<endl<<kriptoOzelTlEder;
-           
-        }
-        
+           cout<<"Genel hesap kripto eder:"<<kriptoGenelTlEder<<endl<<"Ozel hesap kripto eder:"<<kriptoOzelTlEder<<endl;
+        }   
     }
 
     else if (kullanici_girdi==6)
@@ -191,6 +203,45 @@ int main(){
         
     }
     
+    else if (kullanici_girdi==7)
+    {   
+        int kullaniciKriptoAlGirdi;
+        cout<<"Kripto para alma islemini sectiniz, lutfen listeden bir hesap seciniz...."<<endl;
+        for (int z = 0; z < i; z++)
+        {   
+            cout<<z<<"-Hesap ID:"<<hesapList[z].hesapId<<" / Bakiye:"<<hesapList[z].hesapBakiye<<" / Kripto bakiye:"<<hesapList[z].hesapKriptoBakiye<<endl;
+        }
+        cin>>kullaniciKriptoAlGirdi;
+        if (hesapList[kullaniciKriptoAlGirdi].hesapTur=="Genel hesap")
+        {   
+            float bakiyeKriptoDonusumu = hesapList[kullaniciKriptoAlGirdi].hesapBakiye/kriptoGenelTlEder; // mevcut bakiyenin kac kripto edecegi hesaplandi
+            float KriptoBakiyeDonusumu = bakiyeKriptoDonusumu*kriptoGenelTlEder; // alinan kriptolarin tl karsiligi 
+            hesapList[kullaniciKriptoAlGirdi].hesapKriptoBakiye += bakiyeKriptoDonusumu;// alinan kriptolar eklendi
+            hesapList[kullaniciKriptoAlGirdi].hesapBakiye -= KriptoBakiyeDonusumu;// alim sirasinda harcanan tl cikarildi
+            cout<<"Hesabinizdaki bakiye kripto paraya cevrildi"<<endl; // projede bunlari siniftaki nesneleri cagirarak yapmamizi istiyor burasi duzeltilecek ama mantik ayni mantik
+        }
+        else if (hesapList[kullanici_girdi].hesapTur=="Ozel hesap")
+        {
+            hesapList[kullanici_girdi].hesapKriptoBakiye = hesapList[kullanici_girdi].hesapBakiye/kriptoOzelTlEder;
+        }
+
+    }   
+    
+    else if (kullanici_girdi==8)
+    {
+        int kullaniciKriptoSatGirdi;
+        float kullaniciKriptoSatMiktar;
+        cout<<"Kripto para satma islemini sectiniz, lutfen listeden bir hesap seciniz...."<<endl;
+        for (int z = 0; z < i; z++)
+        {   
+            cout<<z<<"-Hesap ID:"<<hesapList[z].hesapId<<" / Bakiye:"<<hesapList[z].hesapBakiye<<" / Kripto bakiye:"<<hesapList[z].hesapKriptoBakiye<<endl;
+        }
+        cin>>kullaniciKriptoSatGirdi;
+        cout<<"Ne kadar kripto satmak istiyorsunuz:"<<endl;
+        cin>>kullaniciKriptoSatMiktar;//kod asamsinda buradan itibaren 
+   }
+    
+
     else if (kullanici_girdi==11)
     {
         break;
