@@ -8,14 +8,16 @@ class Hesap{
         float hesapKriptoBakiye; //hesapKriptoBakiye hesabin kripto bakiyesi
         string hesapId,hesapTur;
 
-        void kriptoParaAl(int kriptoParaAlmaMiktari){
+        float kriptoParaAl(float kriptoParaAlmaMiktari){
             hesapKriptoBakiye +=kriptoParaAlmaMiktari;
             cout<<"Hesabınıza "<<kriptoParaAlmaMiktari<<" adet kripto eklendi..."<<endl;
+            return hesapKriptoBakiye;
         }
 
-        void kriptoParaSat(int kriptoParaSatmaMiktari){
+        float kriptoParaSat(float kriptoParaSatmaMiktari){
             hesapKriptoBakiye -=kriptoParaSatmaMiktari;
             cout<<"Hesabınızdan "<<kriptoParaSatmaMiktari<<" adet kripto eksildi..."<<endl;
+            return hesapKriptoBakiye;
         }
 
         void bakiyeGoster(string hesapId,int hesapBakiye){
@@ -28,7 +30,7 @@ class Hesap{
 };
 
 int main(){
-    srand(time(0));
+    srand(time(NULL));
     float kriptoGenelTlEder = 1; // 1kripto = 1tl
     float kriptoOzelTlEder = 1;
     int kullanici_girdi;
@@ -39,6 +41,7 @@ int main(){
     int gun2,ay2,yil2;
     
     Hesap hesapList[1000];//hesap olusturma sinirimiz 1000 adettir burdan degistirebiliriz.
+    Hesap hesap; 
     int i = 0;
     while (true)
 {   
@@ -216,13 +219,21 @@ int main(){
         {   
             float bakiyeKriptoDonusumu = hesapList[kullaniciKriptoAlGirdi].hesapBakiye/kriptoGenelTlEder; // mevcut bakiyenin kac kripto edecegi hesaplandi
             float KriptoBakiyeDonusumu = bakiyeKriptoDonusumu*kriptoGenelTlEder; // alinan kriptolarin tl karsiligi 
-            hesapList[kullaniciKriptoAlGirdi].hesapKriptoBakiye += bakiyeKriptoDonusumu;// alinan kriptolar eklendi
+
+            hesapList[kullaniciKriptoAlGirdi].hesapKriptoBakiye = hesap.kriptoParaAl(bakiyeKriptoDonusumu);// alinan kriptolar eklendi
             hesapList[kullaniciKriptoAlGirdi].hesapBakiye -= KriptoBakiyeDonusumu;// alim sirasinda harcanan tl cikarildi
-            cout<<"Hesabinizdaki bakiye kripto paraya cevrildi"<<endl; // projede bunlari siniftaki nesneleri cagirarak yapmamizi istiyor burasi duzeltilecek ama mantik ayni mantik
+
+            cout<<"Hesabinizdaki bakiye kripto paraya cevrildi"<<endl; 
         }
-        else if (hesapList[kullanici_girdi].hesapTur=="Ozel hesap")
+        else if (hesapList[kullaniciKriptoAlGirdi].hesapTur=="Ozel hesap")
         {
-            hesapList[kullanici_girdi].hesapKriptoBakiye = hesapList[kullanici_girdi].hesapBakiye/kriptoOzelTlEder;
+            float bakiyeKriptoDonusumu = hesapList[kullaniciKriptoAlGirdi].hesapBakiye/kriptoOzelTlEder; // mevcut bakiyenin kac kripto edecegi hesaplandi
+            float KriptoBakiyeDonusumu = bakiyeKriptoDonusumu*kriptoOzelTlEder; // alinan kriptolarin tl karsiligi 
+
+            hesapList[kullaniciKriptoAlGirdi].hesapKriptoBakiye = hesap.kriptoParaAl(bakiyeKriptoDonusumu);// alinan kriptolar eklendi
+            hesapList[kullaniciKriptoAlGirdi].hesapBakiye -= KriptoBakiyeDonusumu;// alim sirasinda harcanan tl cikarildi
+
+            cout<<"Hesabinizdaki bakiye kripto paraya cevrildi"<<endl;             
         }
 
     }   
@@ -231,6 +242,7 @@ int main(){
     {
         int kullaniciKriptoSatGirdi;
         float kullaniciKriptoSatMiktar;
+
         cout<<"Kripto para satma islemini sectiniz, lutfen listeden bir hesap seciniz...."<<endl;
         for (int z = 0; z < i; z++)
         {   
@@ -239,6 +251,20 @@ int main(){
         cin>>kullaniciKriptoSatGirdi;
         cout<<"Ne kadar kripto satmak istiyorsunuz:"<<endl;
         cin>>kullaniciKriptoSatMiktar;//kod asamsinda buradan itibaren 
+
+        if (kullaniciKriptoSatMiktar>hesapList[kullaniciKriptoSatGirdi].hesapKriptoBakiye)
+        {
+            cout<<"Yetersiz bakiye!..."<<endl;
+        }
+        else
+            if (hesapList[kullaniciKriptoSatGirdi].hesapTur=="Genel hesap"){
+
+            float KriptoTLDonusumu = kullaniciKriptoSatMiktar*kriptoGenelTlEder; // satilacak olan kriptolarin tl karsiligi
+            hesapList[kullaniciKriptoSatGirdi].hesapKriptoBakiye = hesap.kriptoParaSat(kullaniciKriptoSatMiktar);// satilan kriptolar cikarildi
+            hesapList[kullaniciKriptoSatGirdi].hesapBakiye += KriptoTLDonusumu;// satilan kriptolarin tl cinsi bakiyeye eklendi
+
+            cout<<kullaniciKriptoSatMiktar<<" adet kripto satildi ve bakiyeye cevrildi..."<<endl;
+            }
    }
     
 
@@ -250,6 +276,6 @@ int main(){
 
 }
 }
+// tarihin geri alinmasini engelle toplam gun farki ile yaparsin ilk tarihin toplami yeni tarihten buyuk olamaz
 
-
-
+// ozel hesap kripto ederinde sikinti var hep ayni deger geliyor!!
